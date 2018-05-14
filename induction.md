@@ -57,7 +57,7 @@ sess.run(init)
 correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
 ```
 tf.argmax 返回某个tensor对象在某一维上其数据最大值所在的索引，tf.argmax(y,1)表示在y中
-等于1这个最大值的索引
+等于1这个维度的最大值的索引
 
 * tf.reduce_mean(input_tensor, axis)
 
@@ -90,10 +90,10 @@ Tensorflow依赖于一个高效的C++后端来进行计算。与后端的这个�
 ```
 var1 =tf.Variable(tf.truncated_normal(shape, stddev=0.1)) 
 ```
-这个函数产生正太分布，均值和标准差自己设定。
+这个函数产生正态分布，均值和标准差自己设定。
 truncated_normal(shape,mean=0.0,stddev=1.0,dtype=dtypes.float32,seed=None,name=None)
 shape表示生成张量的维度，mean是均值，stddev是标准差。
-这是一个截断的产生正太分布的函数，就是说产生正太分布的值如果与均值的差值大于两倍的标准差，那就重新生成。
+这是一个截断的产生正态分布的函数，就是说产生正态分布的值如果与均值的差值大于两倍的标准差，那就重新生成。
 
 * tf.constant
 
@@ -200,3 +200,68 @@ with tf.name_scope('hidden1') as scope:
 * var.shape.as_list()
 
 以列表的形式显示变量var的形状
+
+
+* tf.python.platform.gfile
+
+随着 tensorflow 版本升级，gfile 已进一步提升至 tf.gfile 下
+常用API：
+```
+tensorflow.python.platform.gfile.Exists
+tensorflow.python.platform.gfile.Glob
+tensorflow.python.platform.gfile.IsDirectory
+tensorflow.python.platform.gfile.FastGFile
+tensorflow.python.platform.gfile.DeleteRecursively
+tensorflow.python.platform.gfile.Open
+tensorflow.python.platform.gfile.ListDirectory
+tensorflow.python.platform.gfile.MakeDirs
+tensorflow.python.platform.gfile.GFile
+tensorflow.python.platform.gfile.Open.write
+tensorflow.python.platform.gfile.Stat.length
+tensorflow.python.platform.gfile.MkDir
+tensorflow.python.platform.gfile.Walk
+tensorflow.python.platform.gfile.FastGFile.read
+```
+
+* tf.nn.in_top_k
+
+tf.nn.in_top_k组要是用于计算预测的结果和实际结果的是否相等，返回一个bool类型的张量，
+tf.nn.in_top_k(prediction, target, K):prediction就是表示你预测的结果，大小就是预测样本的数量乘以输出的维度，
+类型是tf.float32等。target就是实际样本类别的标签，大小就是样本数量的个数。
+K表示每个样本的预测结果的前K个最大的数的索引是否和target中的值匹配。一般都是取1。
+```
+import tensorflow as tf;
+
+A = [[0.8,0.6,0.3], [0.1,0.6,0.4]]
+B = [1, 1]
+out = tf.nn.in_top_k(A, B, 1)
+with tf.Session() as sess:
+    sess.run(tf.initialize_all_variables())
+    print sess.run(out)
+
+output:
+[False  True]
+```
+> 解析：<br/>
+因为A张量里面的第一个元素的最大值的标签是0，第二个元素的最大值的标签是1.。但是实际的确是1和1.所以输出就是False 和True。
+如果把K改成2，那么第一个元素的前面2个最大的元素的位置是0，1，第二个的就是1，2。
+实际结果是1和1。包含在里面，所以输出结果就是True 和True.如果K的值大于张量A的列，那就表示输出结果都是true
+
+* tf.squeeze()
+
+给定张量输入，此操作返回相同类型的张量，并删除所有尺寸为1的尺寸。
+ 如果不想删除所有尺寸1尺寸，可以通过指定squeeze_dims来删除特定尺寸1尺寸。squeeze_dims维度从0开始。
+```
+# 't' is a tensor of shape [1, 2, 1, 3, 1, 1]
+shape(squeeze(t)) ==> [2, 3]
+Or, to remove specific size 1 dimensions:
+
+# 't' is a tensor of shape [1, 2, 1, 3, 1, 1]
+shape(squeeze(t, [2, 4])) ==> [1, 2, 3, 1]
+```
+
+* tf.reset_default_graph()
+
+清除当前正在运行的图,避免变量重复
+
+
