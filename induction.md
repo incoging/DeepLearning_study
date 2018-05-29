@@ -8,6 +8,70 @@ tf.cast(correct_prediction, "float")
 ```
 tf.cast(x, dtype) 将张量x转换成dype类型。
 
+##### tf.concat
+```
+tf.concat(values, axis, name="concat")
+```
+对输入数组进行级联，与tf.stack的区别是tf.stack后会升维
+若values的形状是[2,3]的，有N个，
+若axis=0,那么结果为shape为：[2*N, 3]
+若axis=1,那么结果为shape为：[2, 3*N]
+例子：
+```
+t1 = tf.constant([[1, 2, 3], [4, 5, 6]],dtype=tf.int32)
+t2 = tf.constant([[7, 8, 9], [10, 11, 12]], dtype=tf.int32)
+with tf.Session() as sess:
+    print(t1)
+    print(sess.run(tf.concat([t1, t2], 0)))  # [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]]
+    print(sess.run(tf.concat([t1, t2], 1)))  # [[1, 2, 3, 7, 8, 9], [4, 5, 6, 10, 11, 12]]
+```
+下面讲解tf.stack()
+```
+tf.stack(values, axis=0, name="stack")
+```
+也是对数组进行拼接，若values的形状是[2,3]的，有N个，
+若axis=0,那么结果为shape为：[N, 2, 3]
+若axis=1,那么结果为shape为：[2, N, 3]
+例子：
+```
+x = tf.constant([[1, 4, 7], [11, 14, 17]])
+y = tf.constant([[2, 5, 8], [22, 55, 88]])
+z = tf.constant([[3, 6, 9], [33, 66, 99]])
+axis0 = tf.stack([x, y, z])
+axis1 = tf.stack([x, y, z], axis=1)
+print("x shape: ", x)
+print(axis0)
+print(axis1)
+with tf.Session() as sess:
+    print(sess.run(axis0))
+    print("---------------------------")
+    print(sess.run(axis1))
+
+output:
+x shape:  Tensor("Const_2:0", shape=(2, 3), dtype=int32)
+Tensor("stack:0", shape=(3, 2, 3), dtype=int32)
+Tensor("stack_1:0", shape=(2, 3, 3), dtype=int32)
+[[[ 1  4  7]
+  [11 14 17]]
+
+ [[ 2  5  8]
+  [22 55 88]]
+
+ [[ 3  6  9]
+  [33 66 99]]]
+-------------------------
+[[[ 1  4  7]
+  [ 2  5  8]
+  [ 3  6  9]]
+
+ [[11 14 17]
+  [22 55 88]
+  [33 66 99]]]
+```
+
+
+
+
 ##### eval()
 eval() 其实就是tf.Tensor的Session.run() 的另外一种写法。下面两个例子：
 ```
