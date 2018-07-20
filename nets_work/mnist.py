@@ -107,7 +107,7 @@ def training(loss, learning_rate):
   Creates an optimizer and applies the gradients to all trainable variables.
 
   The Op returned by this function is what must be passed to the
-  `sess.run()` call to cause the model to train.
+  `sess.run()` call to cause the model to train_done.
 
   Args:
     loss: Loss tensor, from loss().

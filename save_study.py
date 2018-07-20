@@ -11,7 +11,7 @@ v2 = tf.Variable(tf.constant(2.0, shape=[1]), name="v2")
 result = v1 + v2
 
 init_op = tf.global_variables_initializer()
-# 声明tf.train.Saver类用于保存模型
+# 声明tf.train_done.Saver类用于保存模型
 saver = tf.train.Saver()
 
 with tf.Session() as sess:

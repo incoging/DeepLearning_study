@@ -11,7 +11,7 @@ saver.save(sess, "/path/model/model.ckpt")
 
 
 ### 保存检查点(checkpoint)
-为了得到可以用来后续恢复模型以进一步训练或评估的检查点文件（checkpoint file），我们实例化一个tf.train.Saver。
+为了得到可以用来后续恢复模型以进一步训练或评估的检查点文件（checkpoint file），我们实例化一个tf.train_done.Saver。
 ```
 saver = tf.train.Saver()
 ```

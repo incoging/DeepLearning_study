@@ -2,7 +2,7 @@
 import numpy as np
 import tensorflow as tf
 
-TRAIN_DATA = "./data/done/ptb.train"
+TRAIN_DATA = "./data/done/ptb.train_done"
 EVAL_DATA = "./data/done/ptb.valid"
 TEST_DATA = "./data/done/ptb.test"
 HIDDEN_SIZE = 300
@@ -21,6 +21,7 @@ EMBEDDING_KEEP_PROB = 0.9
 MAX_GRAD_NORM = 5
 SHARE_EMB_AND_SOFTMAX = True
 
+
 class PTBModel(object):
     def __init__(self, is_training, batch_size, num_steps):
         # 记录使用的batch大小和截断长度
@@ -28,8 +29,8 @@ class PTBModel(object):
         self.num_steps = num_steps
 
         # 定义每一步的输入和预期输出，两者的维度都是[batch_size, num_steps]
-        self.input_data = tf.placeholder(tf.int32, [batch_size, num_steps])
-        self.targets = tf.placeholder(tf.int32, [batch_size, num_steps])
+        self.input_data = tf.placeholder(tf.int32, [batch_size, num_steps], name="inpu_data")
+        self.targets = tf.placeholder(tf.int32, [batch_size, num_steps], name="targets")
 
         # 定义使用LSTM结构为循环体结构且使用dropout的深层循环神经网络
         dropout_keep_prob = LSTM_KEEP_PROB if is_training else 1.0
@@ -45,7 +46,7 @@ class PTBModel(object):
         embedding = tf.get_variable("embedding", [VOCAB_SIZE, HIDDEN_SIZE])
 
         # 将输入单词转化为词向量
-        inputs = tf.nn.embedding_lookup(embedding, self.input_data)
+        inputs = tf.nn.embedding_lookup(embedding, self.input_data, name="inputs")
 
         # 只在训练时使用dropout
         if is_training:
@@ -72,7 +73,7 @@ class PTBModel(object):
         logits = tf.matmul(output, weight) + bias
 
         # 定义交叉熵损失函数和平均损失
-        loss = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=tf.reshape(self.targets, [-1]), logits=logits)
+        loss = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=tf.reshape(self.targets, [-1]), logits=logits, name="loss")
         self.cost = tf.reduce_sum(loss) / batch_size
         self.final_state = state
 
@@ -84,6 +85,10 @@ class PTBModel(object):
         grads, _ = tf.clip_by_global_norm(tf.gradients(self.cost, trainable_variables), MAX_GRAD_NORM)
         optimizer = tf.train.GradientDescentOptimizer(learning_rate=1.0)
         self.train_op = optimizer.apply_gradients(zip(grads, trainable_variables))
+
+        # 将当前计算图输出到TensorBoard日志文件
+        writer = tf.summary.FileWriter("./data/log",tf.get_default_graph())
+        writer.close()
 
 
 # 使用给定的模型model在数据data上运行train_op并返回在全部数据上的perplexity值
@@ -129,7 +134,7 @@ def make_batches(id_list, batch_size, num_step):
 
     # 重复上述操作，但是每个位置向右移动一位。这里得到的是RNN每一步输出所需要预测的
     # 下一个单词。
-    label = np.array(id_list[1 : num_batches * batch_size * num_step + 1])
+    label = np.array(id_list[1: num_batches * batch_size * num_step + 1])
     label = np.reshape(label, [batch_size, num_batches * num_step])
     label_batches = np.split(label, num_batches, axis=1)
     # 返回一个长度为num_batches的数组，其中每一项包括一个data矩阵和一个label矩阵。

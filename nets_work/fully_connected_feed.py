@@ -57,7 +57,7 @@ def placeholder_inputs(batch_size):
     """
     # Note that the shapes of the placeholders match the shapes of the full
     # image and label tensors, except the first dimension is now batch_size
-    # rather than the full size of the train or test data sets.
+    # rather than the full size of the train_done or test data sets.
     images_placeholder = tf.placeholder(tf.float32, shape=(batch_size,
                                                            mnist.IMAGE_PIXELS))
     labels_placeholder = tf.placeholder(tf.int32, shape=(batch_size))
@@ -162,7 +162,7 @@ def run_training():
         # Session函数中没有传入参数，表明该代码将会依附于（如果还没有创建会话，则会创建新的会话）默认的本地会话。
         sess = tf.Session()
 
-        # 可以实例化一个tf.train.summary.FileWriter，用于写入包含了图表本身和即时数据具体值的事件文件。
+        # 可以实例化一个tf.train_done.summary.FileWriter，用于写入包含了图表本身和即时数据具体值的事件文件。
         summary_writer = tf.train.summary.FileWriter(FLAGS.train_dir, sess.graph)
 
         # And then after everything is built:

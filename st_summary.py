@@ -4,7 +4,7 @@ import tensorflow as tf
 global_step = tf.Variable(0, trainable=False)
 # 迭代的+1操作
 increment_op = tf.assign_add(global_step, tf.constant(1))
-# 实例应用中，+1操作往往在`tf.train.Optimizer.apply_gradients`内部完成。
+# 实例应用中，+1操作往往在`tf.train_done.Optimizer.apply_gradients`内部完成。
 
 # 创建一个根据计数器衰减的Tensor
 lr = tf.train.exponential_decay(0.1, global_step, decay_steps=1, decay_rate=0.9, staircase=False)

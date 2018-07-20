@@ -1,8 +1,8 @@
 #coding:utf-8
-#tf.train.Coordinator()
+#tf.train_done.Coordinator()
 '''
 Tensorflow提供了两个类来帮助多线程的实现
-tf.train.Coordinator()和tf.QueueRunner
+tf.train_done.Coordinator()和tf.QueueRunner
 Coordinator类可以用来同时停止多个工作线程并且向那个在等待所有工作线程终止的程序报告异常.
 QueueRunner类用来协调多个工作线程同时将多个张量推入同一个队列中
 

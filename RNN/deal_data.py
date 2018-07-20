@@ -6,9 +6,9 @@ import sys
 MODE = "PTB_TEST"    # 将MODE设置为"PTB_TRAIN", "PTB_VALID", "PTB_TEST", "TRANSLATE_EN", "TRANSLATE_ZH"之一。
 
 if MODE == "PTB_TRAIN":        # PTB训练数据
-    RAW_DATA = "./data/ptb.train.txt"  # 训练集数据文件
+    RAW_DATA = "./data/ptb.train_done.txt"  # 训练集数据文件
     VOCAB = "./data/done/ptb.vocab"                                 # 词汇表文件
-    OUTPUT_DATA = "./data/done/ptb.train"                           # 将单词替换为单词编号后的输出文件
+    OUTPUT_DATA = "./data/done/ptb.train_done"                           # 将单词替换为单词编号后的输出文件
 elif MODE == "PTB_VALID":      # PTB验证数据
     RAW_DATA = "./data/ptb.valid.txt"
     VOCAB = "./data/done/ptb.vocab"
@@ -18,13 +18,13 @@ elif MODE == "PTB_TEST":       # PTB测试数据
     VOCAB = "./data/done/ptb.vocab"
     OUTPUT_DATA = "./data/done/ptb.test"
 elif MODE == "TRANSLATE_ZH":   # 中文翻译数据
-    RAW_DATA = "../datasets/TED_data/train.txt.zh"
+    RAW_DATA = "../datasets/TED_data/train_done.txt.zh"
     VOCAB = "zh.vocab"
-    OUTPUT_DATA = "train.zh"
+    OUTPUT_DATA = "train_done.zh"
 elif MODE == "TRANSLATE_EN":   # 英文翻译数据
-    RAW_DATA = "../datasets/TED_data/train.txt.en"
+    RAW_DATA = "../datasets/TED_data/train_done.txt.en"
     VOCAB = "en.vocab"
-    OUTPUT_DATA = "train.en"
+    OUTPUT_DATA = "train_done.en"
 
 def serial_number():
     # 统计单词出现的频率
